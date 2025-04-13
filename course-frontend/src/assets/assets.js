@@ -1,1 +1,1 @@
-export const URL="http://localhost:3000";
+export const URL="https://coursesellingapp-1-l0cw.onrender.com";
