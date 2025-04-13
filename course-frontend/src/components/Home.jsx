@@ -69,7 +69,7 @@ setCourses((prevCourse)=>prevCourse.filter((c)=>c._id!=courseId));
  }
   return (
     <div className="pt-24 px-4 bg-gray-900 min-h-screen text-white">
-     <div className="relative w-full h-[400px] mb-10 rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(0,255,255,0.3)] border border-cyan-500">
+     <div className="relative w-full h-[400px] mb-10 rounded-2xl overflow-hidden ">
   <img
     src={images[currentImage]}
     alt="Learning"
