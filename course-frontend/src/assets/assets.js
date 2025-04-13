@@ -1,1 +1,1 @@
-export const URL="https://coursesellingapp-1-l0cw.onrender.com";
+export const URL="https://coursesellingapp-1-hzg3.onrender.com";
