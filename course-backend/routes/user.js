@@ -1,7 +1,7 @@
 const {Router, json}=require("express");
 const { userModel, purchaseModel, courseModel, reviewModel } = require("../db");
 const userRouter=Router();
-const bcrypt=require("bcrypt");
+const bcrypt = require("bcryptjs");
 const {z}=require("zod");
 const jwt= require('jsonwebtoken');
 const {jwtSceretUser} = require("../config");
