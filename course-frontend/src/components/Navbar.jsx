@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signout } from "./feature/userSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -13,56 +14,119 @@ function Navbar() {
     localStorage.removeItem("token");
     dispatch(signout());
     navigate("/");
-    toast.success("logout successfull")
+    toast.success("Logout successful");
+    setMenuOpen(false);
   }
 
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white px-6 py-4 flex justify-between items-center shadow-lg border-b border-white/20">
-      <Link
-        to="/"
-        className="text-xl font-bold tracking-wide text-white hover:text-cyan-400 transition duration-300"
-      >
-        Course Platform
-      </Link>
+  const navLinkStyle =
+    "text-white hover:underline underline-offset-8 transition";
 
-      {user.isAuthenticated ? (
-        <div className="flex items-center gap-4">
-          <span className="text-sm font-medium text-gray-200 bg-gray-800 px-3 py-1 rounded-full shadow-sm">
-            Welcome, {user.userinfo?.firstName}
-          </span>
-          {user.userinfo.role==="admin"?(<div><Link to="/addcourse">
-            <button className="bg-cyan-600 text-white font-semibold py-1 px-4 rounded-xl hover:bg-cyan-500 transition">
-              Add Course
-            </button>
-          </Link></div>):(<Link to="/mycourses">
-            <button className="bg-cyan-600 text-white font-semibold py-1 px-4 rounded-xl hover:bg-cyan-500 transition">
-              My Courses
-            </button>
-          </Link>)}
+  return (
+    <nav className="bg-gray-900 text-white shadow-md border-b border-white/10 fixed w-full z-50">
+      <div className="w-full py-3 px-2 flex items-center">
+        <Link
+          to="/"
+          className="text-xl font-bold tracking-wide hover:text-cyan-400 transition"
+        >
+          Course Platform
+        </Link>
+
+        {/* Desktop Menu */}
+        <div className="hidden sm:flex gap-8 items-center ml-auto mr-6">
+          <Link to="/">
+            <span className={navLinkStyle}>Home</span>
+          </Link>
+
+          {user.isAuthenticated ? (
+            <>
+              <span className="text-sm bg-gray-800 px-3 py-1 rounded-full">
+                Hello, {user.userinfo?.firstName}
+              </span>
+              {user.userinfo.role === "admin" ? (
+                <Link to="/addcourse">
+                  <span className={navLinkStyle}>Add Course</span>
+                </Link>
+              ) : (
+                <Link to="/mycourses">
+                  <span className={navLinkStyle}>My Courses</span>
+                </Link>
+              )}
+              <button
+                className="text-red-400 hover:text-red-300 hover:underline underline-offset-8 transition"
+                onClick={logOutHandler}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/signup">
+                <span className={navLinkStyle}>Sign Up</span>
+              </Link>
+              <Link to="/signin">
+                <span className={navLinkStyle}>Sign In</span>
+              </Link>
+              <Link to="/about">
+                <span className={navLinkStyle}>About Us</span>
+              </Link>
+            </>
+          )}
+        </div>
+
+        {/* Mobile Menu */}
+        <div className="sm:hidden ml-auto">
           <button
-            onClick={logOutHandler}
-            className="bg-red-600 hover:bg-red-500 font-semibold text-white py-1 px-4 rounded-xl transition"
+            className="focus:outline-none"
+            onClick={() => setMenuOpen(!menuOpen)}
           >
-            Logout
+            <div className="w-6 h-0.5 bg-white mb-1"></div>
+            <div className="w-6 h-0.5 bg-white mb-1"></div>
+            <div className="w-6 h-0.5 bg-white"></div>
           </button>
         </div>
-      ) : (
-        <div className="flex gap-4">
-          <Link to="/signup">
-            <button className="bg-cyan-600 text-white font-semibold py-1 px-4 rounded-xl hover:bg-cyan-500 transition">
-              Sign Up
-            </button>
+      </div>
+
+      {/* Mobile Menu  */}
+      {menuOpen && (
+        <div className="sm:hidden px-4 pb-3 flex flex-col gap-3 bg-gray-800 items-center text-center">
+          <Link to="/" onClick={() => setMenuOpen(false)}>
+            <span className={navLinkStyle}>Home</span>
           </Link>
-          <Link to="/signin">
-            <button className="bg-cyan-600 text-white font-semibold py-1 px-4 rounded-xl hover:bg-cyan-500 transition">
-              Sign In
-            </button>
-          </Link>
-          <Link to="/about">
-            <button className="bg-cyan-600 text-white font-semibold py-1 px-4 rounded-xl hover:bg-cyan-500 transition">
-              About Us
-            </button>
-          </Link>
+
+          {user.isAuthenticated ? (
+            <>
+              <span className="text-sm bg-gray-700 text-center px-3 py-1 rounded-full">
+                Hello, {user.userinfo?.firstName}
+              </span>
+              {user.userinfo.role === "admin" ? (
+                <Link to="/addcourse" onClick={() => setMenuOpen(false)}>
+                  <span className={navLinkStyle}>Add Course</span>
+                </Link>
+              ) : (
+                <Link to="/mycourses" onClick={() => setMenuOpen(false)}>
+                  <span className={navLinkStyle}>My Courses</span>
+                </Link>
+              )}
+              <button
+                className="text-red-400 hover:text-red-300 hover:underline underline-offset-8 transition text-left"
+                onClick={logOutHandler}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/signup" onClick={() => setMenuOpen(false)}>
+                <span className={navLinkStyle}>Sign Up</span>
+              </Link>
+              <Link to="/signin" onClick={() => setMenuOpen(false)}>
+                <span className={navLinkStyle}>Sign In</span>
+              </Link>
+              <Link to="/about" onClick={() => setMenuOpen(false)}>
+                <span className={navLinkStyle}>About Us</span>
+              </Link>
+            </>
+          )}
         </div>
       )}
     </nav>
